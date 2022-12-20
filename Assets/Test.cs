@@ -5,20 +5,11 @@ using JungExtension.UI;
 
 public class Test : MonoBehaviour
 {
-    // Start is called before the first frame update
+    [SerializeField] private ExtensionToggleSwitch toggleSwitch;
+
     void Start()
     {
-        ExtensionScrollSnap snap = this.GetComponent<ExtensionScrollSnap>();
-        snap.Initialized(14);
-        snap.OnChangedEvent.AddListener((int n) =>
-        {
-            Debug.Log($"> changed {n}");
-        });
-        snap.OnChangeEndEvent.AddListener((int n) => 
-        {
-            Debug.Log($"> chang End {n}");
-        });
-        
+        toggleSwitch.Initialized(false);
     }
 
     // Update is called once per frame

@@ -4,13 +4,23 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using UnityEngine.EventSystems;
+using UnityEngine.Events;
 
 
 namespace JungExtension.UI
 {
     [AddComponentMenu("JungExtensions/ExtensionToggleSwitch")]
-    public class ExtensionToggleSwitch : MonoBehaviour
+    public class ExtensionToggleSwitch : MonoBehaviour,IPointerClickHandler
     {
+        public class ChangedEvent : UnityEvent<bool> { }
+        public ChangedEvent m_OnChangedEvent = new ChangedEvent();
+        /// <summary>
+        //
+        /// </summary>
+        public ChangedEvent OnChangeEvent { get { return m_OnChangedEvent; } set { m_OnChangedEvent = value; } }
+
+
         public enum SettingState
         {
             DefaultSetting,
@@ -84,10 +94,6 @@ namespace JungExtension.UI
         private static Color m_defaultHandleColor = new Color(0,0,1);
         private static Color m_defaultBGColor = new Color(1, 1, 1);
 
-        private void Start()
-        {
-            Initialized(false);
-        }
 
 
 
@@ -124,7 +130,7 @@ namespace JungExtension.UI
                     break;
             }
             SetDefaultHandle(_defaultValue);
-        }
+        }        
 
 
         public void CreateChilds()
@@ -221,7 +227,17 @@ namespace JungExtension.UI
                 m_defaultHandleSprite = Resources.Load<Sprite>("Default/Circle");
             }
             m_handleImg.sprite = m_defaultHandleSprite;
-            m_handleImg.color = m_defaultHandleColor;
+            if(m_UseChangeColor)
+            {
+                if (IsOn)
+                    m_handleImg.color = m_handleOnColor;
+                else
+                    m_handleImg.color = m_handleOffColor;
+            }
+            else
+            {
+                m_handleImg.color = m_defaultHandleColor;
+            }
         }
 
 
@@ -232,7 +248,17 @@ namespace JungExtension.UI
                 m_defaultBGSprite = Resources.Load<Sprite>("Default/Btn");
             }
             m_BGImg.sprite = m_defaultBGSprite;
-            m_BGImg.color = m_defaultBGColor;
+            if(m_UseChangeColor)
+            {
+                if (IsOn)
+                    m_BGImg.color = m_backGroundOnColor;
+                else
+                    m_BGImg.color = m_backGroundOffColor;
+            }
+            else
+            {
+                m_BGImg.color = m_defaultBGColor;
+            }            
         }
 
 
@@ -270,17 +296,17 @@ namespace JungExtension.UI
         }
 
 
-        public void SetActiveHandle(bool _active,Action _onComplete)
+        public void SetActiveHandle(bool _active)
         {
             if (_active)
             {
                 m_isOn = true;
-                SetActiveHandleOn(_onComplete);                                
+                SetActiveHandleOn();                                
             }                
             else
             {
                 m_isOn = false;
-                SetActiveHandleOff(_onComplete);                
+                SetActiveHandleOff();                
             }
             UpdateSetting();
         }
@@ -299,22 +325,22 @@ namespace JungExtension.UI
             }
         }
 
-        private void SetActiveHandleOn(Action _onComplete)
+        private void SetActiveHandleOn()
         {
             //m_handleRect.do
             float switchWidth = m_switchRect.rect.width;
             float handleWidth = m_handleRect.rect.width;
             float handleY = m_handleRect.anchoredPosition.y;
             Vector2 target = new Vector2(switchWidth - handleWidth, handleY);
-            m_handleRect.DOAnchorPos(target, 0.5f).OnComplete(()=> { _onComplete(); });
+            m_handleRect.DOAnchorPos(target, 0.5f);
         }
 
 
-        private void SetActiveHandleOff(Action _onComplete)
+        private void SetActiveHandleOff()
         {            
             float handleY = m_handleRect.anchoredPosition.y;
             Vector2 target = new Vector2(0, handleY);
-            m_handleRect.DOAnchorPos(target, 0.5f).OnComplete(()=> { _onComplete(); });
+            m_handleRect.DOAnchorPos(target, 0.5f);
         }
 
 
@@ -346,15 +372,6 @@ namespace JungExtension.UI
 
         }
 
-
-        private void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.RightArrow))
-                SetActiveHandle(true, () => { });
-            else if (Input.GetKeyDown(KeyCode.LeftArrow))
-                SetActiveHandle(false, () => { });
-        }
-
         /// <summary>
         /// BG,Switch 자식 오브젝트를 가지고 있는가?
         /// </summary>
@@ -367,6 +384,20 @@ namespace JungExtension.UI
                     return true;
             }
             return false;
+        }
+
+        public void OnPointerClick(PointerEventData eventData)
+        {
+            if(IsOn)
+            {
+                m_isOn = false;                
+            }
+            else
+            {
+                m_isOn = true;
+            }
+            SetActiveHandle(m_isOn);
+            m_OnChangedEvent.Invoke(m_isOn);
         }
     }
 }

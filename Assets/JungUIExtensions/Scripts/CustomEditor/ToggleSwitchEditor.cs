@@ -25,21 +25,19 @@ public class ToggleSwitchEditor : Editor
             EditorGUILayout.ObjectField("Script", MonoScript.FromMonoBehaviour((MonoBehaviour)target), GetType(), false);
 
         toggleSwitch.m_SettingState = (ExtensionToggleSwitch.SettingState)EditorGUILayout.EnumPopup("SettingState", toggleSwitch.m_SettingState);
-
+        toggleSwitch.m_UseChangeColor = EditorGUILayout.Toggle(new GUIContent("UsingChangeColor", "Switch 작동시 컬러값을 변경합니다."), toggleSwitch.m_UseChangeColor);
 
         switch (toggleSwitch.m_SettingState)
         {
             case ExtensionToggleSwitch.SettingState.DefaultSetting:
-                {
-                    toggleSwitch.m_UseChangeColor = false;                    
-                    toggleSwitch.SetChangeDefaultSetting();
+                {                    
+                    //toggleSwitch.SetChangeDefaultSetting();
                 }
                 break;
             case ExtensionToggleSwitch.SettingState.ChangeSprite:
                 {                    
 
-                    GUILayout.Space(10);                    
-                    toggleSwitch.m_UseChangeColor = EditorGUILayout.Toggle(new GUIContent("UsingChangeColor", "Switch 작동시 컬러값을 변경합니다."), toggleSwitch.m_UseChangeColor);
+                    GUILayout.Space(10);                                        
 
                     GUILayout.Space(10);
                     GUILayout.Label("배경이미지");                    
@@ -55,34 +53,33 @@ public class ToggleSwitchEditor : Editor
                     toggleSwitch.HandleOnSprite = (Sprite)EditorGUILayout.ObjectField("핸들 On", toggleSwitch.HandleOnSprite, typeof(Sprite), false, GUILayout.Height(EditorGUIUtility.singleLineHeight));
 
 
-                    if(toggleSwitch.m_UseChangeColor)
-                    {
-                        GUILayout.Space(10);
-                        GUILayout.Label("컬러");
-
-                        toggleSwitch.HandleOffColor = EditorGUILayout.ColorField("Handle컬러 Off",toggleSwitch.HandleOffColor, GUILayout.Height(EditorGUIUtility.singleLineHeight));
-
-                        toggleSwitch.HandleOnColor = EditorGUILayout.ColorField("Handle컬러On", toggleSwitch.HandleOnColor, GUILayout.Height(EditorGUIUtility.singleLineHeight));
-
-                        toggleSwitch.BackGroundOffColor= EditorGUILayout.ColorField("BG컬러 Off", toggleSwitch.BackGroundOffColor, GUILayout.Height(EditorGUIUtility.singleLineHeight));
-
-                        toggleSwitch.BackGroundOnColor = EditorGUILayout.ColorField("BG컬러On", toggleSwitch.BackGroundOnColor, GUILayout.Height(EditorGUIUtility.singleLineHeight));
-                    }
-
-                    toggleSwitch.SetChangeSpriteSetting();
+                    //toggleSwitch.SetChangeSpriteSetting();
                 }
                 break;        
         }
 
+        if (toggleSwitch.m_UseChangeColor)
+        {
+            GUILayout.Space(10);
+            GUILayout.Label("컬러");
+
+            toggleSwitch.HandleOffColor = EditorGUILayout.ColorField("Handle컬러 Off", toggleSwitch.HandleOffColor, GUILayout.Height(EditorGUIUtility.singleLineHeight));
+
+            toggleSwitch.HandleOnColor = EditorGUILayout.ColorField("Handle컬러On", toggleSwitch.HandleOnColor, GUILayout.Height(EditorGUIUtility.singleLineHeight));
+
+            toggleSwitch.BackGroundOffColor = EditorGUILayout.ColorField("BG컬러 Off", toggleSwitch.BackGroundOffColor, GUILayout.Height(EditorGUIUtility.singleLineHeight));
+
+            toggleSwitch.BackGroundOnColor = EditorGUILayout.ColorField("BG컬러On", toggleSwitch.BackGroundOnColor, GUILayout.Height(EditorGUIUtility.singleLineHeight));
+        }
 
 
         if (GUILayout.Button("On"))
         {            
-            toggleSwitch.SetActiveHandle(true,()=> { Debug.Log("> On"); });
+            toggleSwitch.SetActiveHandle(true);
         }
         if (GUILayout.Button("Off"))
         {            
-            toggleSwitch.SetActiveHandle(false,()=> { Debug.Log("> Off"); });
+            toggleSwitch.SetActiveHandle(false);
         }
         if (GUILayout.Button("Debug"))
         {
