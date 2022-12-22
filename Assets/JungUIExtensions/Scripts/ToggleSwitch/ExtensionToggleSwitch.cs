@@ -116,7 +116,8 @@ namespace JungExtension.UI
                 m_handleImg = m_handleRect.GetComponent<Image>();
             }
 
-            switch(m_SettingState)
+            SetDefaultHandle(_defaultValue);
+            switch (m_SettingState)
             {
                 case SettingState.DefaultSetting:
                     {
@@ -128,8 +129,7 @@ namespace JungExtension.UI
                         SetChangeSpriteSetting();
                     }
                     break;
-            }
-            SetDefaultHandle(_defaultValue);
+            }            
         }        
 
 

@@ -9,7 +9,7 @@ public class Test : MonoBehaviour
 
     void Start()
     {
-        toggleSwitch.Initialized(false);
+        toggleSwitch.Initialized(true);
     }
 
     // Update is called once per frame
