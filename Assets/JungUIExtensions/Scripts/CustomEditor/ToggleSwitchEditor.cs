@@ -17,7 +17,7 @@ public class ToggleSwitchEditor : Editor
         if(!toggleSwitch.HasChild())
         {            
             toggleSwitch.CreateChilds();
-        }        
+        }                
     }
     public override void OnInspectorGUI()
     {

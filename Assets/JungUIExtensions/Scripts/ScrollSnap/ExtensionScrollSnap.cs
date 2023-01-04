@@ -8,10 +8,11 @@ using DG.Tweening;
 
 namespace JungExtension.UI
 {   
+    
     [RequireComponent(typeof(ScrollRect))]
     [AddComponentMenu("JungExtensions/ExtensionScrollSnap")]
     public class ExtensionScrollSnap : MonoBehaviour,IBeginDragHandler,IDragHandler,IEndDragHandler
-    {          
+    {                  
         public class ChangedEvent : UnityEvent<int> { }
         public class ChangeEndEvent : UnityEvent<int> { }
         
@@ -104,7 +105,7 @@ namespace JungExtension.UI
             m_scrollRect.horizontalNormalizedPosition = GetHorizontalNormalizedPosition(m_startIndex);
         }
         public void Initialized(int _count,int _startIndex)
-        {
+        {            
             if (m_UseDragged)
                 m_scrollRect.horizontal = true;
             else
