@@ -38,6 +38,7 @@ namespace JungExtension.UI
 
         [SerializeField] private bool m_UseHardSwipe = false;
 
+        [SerializeField] private bool m_UseDragged = true;
 
 
         private int m_currentIndex;
@@ -88,8 +89,12 @@ namespace JungExtension.UI
             }
         }        
         public void Initialized(int _count)
-        {                 
-            m_scrollRect.horizontal = true;
+        {
+            if (m_UseDragged)
+                m_scrollRect.horizontal = true;
+            else
+                m_scrollRect.horizontal = false;
+
             m_scrollRect.vertical = false;
             if (m_UseHardSwipe) m_scrollRect.inertia = false;
             m_scrollRect.elasticity = 0.1f;
@@ -100,7 +105,11 @@ namespace JungExtension.UI
         }
         public void Initialized(int _count,int _startIndex)
         {
-            m_scrollRect.horizontal = true;
+            if (m_UseDragged)
+                m_scrollRect.horizontal = true;
+            else
+                m_scrollRect.horizontal = false;
+
             m_scrollRect.vertical = false;
             if (m_UseHardSwipe) m_scrollRect.inertia = false;
             m_scrollRect.elasticity = 0.1f;
@@ -211,6 +220,9 @@ namespace JungExtension.UI
         float m_maxClamp;
         public void OnBeginDrag(PointerEventData eventData)
         {
+            if (!m_UseDragged) 
+                return;
+
             m_isDrag = true;
             m_BeginDrag = eventData.position;
             //m_OnchangeStartEvent.Invoke();   
@@ -223,14 +235,18 @@ namespace JungExtension.UI
         }
         public void OnDrag(PointerEventData eventData)
         {
-            if(m_UseHardSwipe)
+            if (!m_UseDragged)
+                return;
+            if (m_UseHardSwipe)
             {
                 float value = Mathf.Clamp(m_scrollRect.horizontalNormalizedPosition, m_minClamp,m_maxClamp);
                 m_scrollRect.horizontalNormalizedPosition = value;                
             }            
         }
         public void OnEndDrag(PointerEventData eventData)
-        {                        
+        {
+            if (!m_UseDragged)
+                return;
             m_EndDrag = eventData.position;            
             m_dragDir = (m_EndDrag - m_BeginDrag).normalized;            
             if(m_UseHardSwipe)
@@ -344,7 +360,7 @@ namespace JungExtension.UI
         }
         private void Update()
         {            
-            UpdatePage();            
+            UpdatePage();                      
         }        
     }
 }
