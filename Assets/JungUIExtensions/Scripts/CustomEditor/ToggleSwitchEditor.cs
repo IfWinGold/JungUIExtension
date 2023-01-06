@@ -4,6 +4,7 @@ using JungExtension.UI;
 using UnityEngine;
 using UnityEditor;
 
+#if UNITY_EDITOR
 [CustomEditor(typeof(ExtensionToggleSwitch))]
 public class ToggleSwitchEditor : Editor
 {
@@ -89,3 +90,4 @@ public class ToggleSwitchEditor : Editor
             EditorUtility.SetDirty(target);
     }
 }
+#endif
