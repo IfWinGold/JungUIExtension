@@ -156,6 +156,8 @@ namespace JungExtension.UI
             GameObject container = new GameObject("Container");
             RectTransform containerRect = container.AddComponent<RectTransform>();
             container.transform.parent = this.transform;
+            container.transform.localScale = Vector3.one;
+            container.transform.localPosition = Vector3.zero;
             containerRect.anchorMin = new Vector2(0f, 0f);
             containerRect.anchorMax = new Vector2(1f, 1f);
             containerRect.offsetMin = Vector2.zero;
@@ -166,13 +168,16 @@ namespace JungExtension.UI
 
 
         private int GetNearestPageIndex()
-        {
+        {            
             int current = m_currentIndex;
-            float scrollPosition = m_scrollRect.horizontalNormalizedPosition;
+            float scrollPosition = m_scrollRect.horizontalNormalizedPosition;            
             if (current == 0)
             {
                 //비교대상 인덱스
                 int next = m_currentIndex + 1;//1번 인덱스
+                if (next > m_ViewList.Count - 1)
+                    return current;
+
                 float currentPosition = Mathf.Abs(scrollPosition - GetHorizontalNormalizedPosition(current));                
                 float nextPosition =Mathf.Abs(scrollPosition - GetHorizontalNormalizedPosition(next));
                                 
@@ -335,6 +340,8 @@ namespace JungExtension.UI
                 
         private void UpdatePage()
         {
+            if (m_ViewList.Count <1)
+                return;
             float velX = Mathf.Abs(m_scrollRect.velocity.x);
 
             if(m_UseHardSwipe)
